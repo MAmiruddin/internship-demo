@@ -55,12 +55,10 @@ router.post('/login', async (req,res) => {
      if(!validPass) return res.status(400).send('Invalid Password')
 
      //Create and assign a token
-     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn:'40s'});
-     res.header('auth-token', token);
+     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn:'15s'});
 
      //Create refresh token
      const refreshToken = jwt.sign({_id: user._id}, process.env.REFRESH_SECRET);
-     res.header('refesh-token', refreshToken);
 
      res.json({acessToken: token, refreshToken: refreshToken})
 
@@ -73,8 +71,7 @@ router.post('/token', async (req,res) => {
      const refToken = req.body.token;
      jwt.verify(refToken, process.env.REFRESH_SECRET, (err,user) => {
           if (err) return res.status(400).send('Access Denied');
-          const accessToken = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn:'40s'});
-          res.header('auth-token', refToken);
+          const accessToken = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn:'15s'});
           res.json({newToken: accessToken})
      })
 
