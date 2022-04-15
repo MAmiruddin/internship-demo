@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-
+//Create User
 router.post('/register', async (req,res) => {
 
      //Validate Data
@@ -36,6 +36,79 @@ router.post('/register', async (req,res) => {
      }catch(err){
           res.status(400).send(err);
      }
+});
+
+//Find User
+router.get('/', async (req,res) => {
+
+     try{
+          const get = await User.find();
+          res.json(get);
+     }catch(err){
+          res.json({message:err});
+     }
+     
+
+});
+
+//Find User By ID
+router.get('/:getId', async (req,res) => {
+
+     try{
+          const gets = await User.findById(req.params.getId);
+          res.json(gets);
+     }catch(err){
+          res.json({message:err});
+     }
+
+});
+
+//Delete User
+router.delete('/:deleteId', async (req,res) => {
+
+     try{
+          const removed = await User.remove({_id: req.params.deleteId});
+          res.json(removed);
+     }catch(err){
+          res.json({message:err});
+     }
+
+});
+
+//Update User Info
+router.put('/:putId', async (req,res) => {
+
+     //Validate Data
+     const {error} = registerValidation(req.body);
+     if(error)
+     return res.status(400).send(error.details[0].message);
+ 
+     //Check if user is registered
+     const emailExists = await User.findOne({email: req.body.email});
+     if (emailExists) return res.status(400).send('Email already exists');
+      
+     //Hash Passwords
+     const salt = await bcrypt.genSalt(10);
+     const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+     try{
+
+          const updated = await User.updateOne(
+
+               {_id: req.params.putId}, 
+               {$set:
+                    {
+                         name: req.body.name,
+                         email: req.body.email,
+                         password: hashedPassword
+                    }
+               });
+
+          res.json(updated);
+     }catch(err){
+          res.json({message:err});
+     }
+
 });
 
 //Login
