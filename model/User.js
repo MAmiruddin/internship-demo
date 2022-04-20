@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
           min: 6,
           max: 1024
      },
+     tenent_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true, 
+          ref: 'tenent'
+     },
      date:{
           type: Date,
           default: Date.now
@@ -27,4 +32,5 @@ const userSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('User', userSchema);
+
+module.exports = mongoose.model('User', userSchema,'users');
