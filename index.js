@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 //Import route
 const authRoute = require('./route/auth');
 const postRoute = require('./route/post');
-const tenentRoute = require('./route/tenent');
+const tenantRoute = require('./route/tenant');
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ app.use(express.json());
 //Route Middlewares
 app.use('/api/user', authRoute);
 app.use('/api/post', postRoute);
-app.use('/api/tenent', tenentRoute);
+app.use('/api/tenant', tenantRoute);
 
 
 

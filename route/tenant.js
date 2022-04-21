@@ -1,29 +1,29 @@
 const router = require('express').Router();
 const { default: mongoose } = require('mongoose');
-const Tenent = require('../model/Tenent');
+const Tenant = require('../model/Tenant');
 const User = require('../model/User');
 
 router.post('/', async (req,res) => {
 
-     //New Tenent
-     const tenent = new Tenent({
-          tenent_name: req.body.tenent_name
+     //New Tenant
+     const tenant = new Tenant({
+          tenant_name: req.body.tenant_name
      })
 
      try{
-          const savedTenent = await tenent.save();
-          res.send({tenent_id: tenent._id});
+          const savedTenant = await tenant.save();
+          res.send({tenant_id: tenant._id});
 
      }catch(err){
           res.status(400).send(err);
      }
 });
 
-//Find Tenent
+//Find Tenant
 router.get('/list', async (req,res) => {
 
      try{
-          const get = await Tenent.find();
+          const get = await Tenant.find();
           res.json(get);
      }catch(err){
           res.json({message:err});
@@ -32,11 +32,11 @@ router.get('/list', async (req,res) => {
 
 });
 
-//Find Tenent By ID
+//Find Tenant By ID
 router.get('/:getId', async (req,res) => {
 
      try{
-          const gets = await Tenent.findOne({tenent_id: req.params.getId});
+          const gets = await Tenant.findOne({tenant_id: req.params.getId});
           res.json(gets);
      }catch(err){
           res.json({message:err});
@@ -44,7 +44,7 @@ router.get('/:getId', async (req,res) => {
 
 });
 
-//Find Employee in Tenents
+//Find Employee in Tenants
 router.get('/', async (req,res) => {
 
 const result =  await mongoose.model('User').aggregate([
@@ -59,10 +59,10 @@ const result =  await mongoose.model('User').aggregate([
      },
      {
           $lookup:{
-                 from:"tenent",
-                 localField: "tenent_id",
+                 from:"tenant",
+                 localField: "tenant_id",
                  foreignField: "_id",
-                 as: "Tenent"
+                 as: "Tenant"
           }
        },
      {

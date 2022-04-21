@@ -27,7 +27,7 @@ router.post('/register', async (req,res) => {
           name: req.body.name,
           email: req.body.email,
           password: hashedPassword,
-          tenent_id: req.body.tenent_id
+          tenant_id: req.body.tenant_id
      })
 
      try{

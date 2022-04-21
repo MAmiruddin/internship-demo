@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema({
           min: 6,
           max: 1024
      },
-     tenent_id: {
+     tenant_id: {
           type: mongoose.Schema.Types.ObjectId,
           required: true, 
-          ref: 'tenent'
+          ref: 'tenant'
      },
      date:{
           type: Date,
