@@ -1,14 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM node:8.5.0
+FROM node:16.14.2
 
-RUN mkdir -p /app
 WORKDIR /app
 
-RUN npm install -g nodemon
-RUN npm install express --save
-RUN npm install mongoose
-RUN npm install dotenv --save
+COPY package.json ./
+
+RUN npm install
 
 COPY . .
 
-CMD ["npm", "start"]
+#CMD ["npm", "start"]
