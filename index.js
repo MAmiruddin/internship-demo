@@ -8,6 +8,7 @@ const authRoute = require('./route/auth');
 const postRoute = require('./route/post');
 const tenantRoute = require('./route/tenant');
 
+
 dotenv.config();
 
 //Connect to DB

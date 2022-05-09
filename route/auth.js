@@ -134,7 +134,9 @@ router.post('/login', async (req,res) => {
      //Create refresh token
      const refreshToken = jwt.sign({_id: user._id}, process.env.REFRESH_SECRET);
 
-     res.json({acessToken: token, refreshToken: refreshToken})
+     res.header('auth-token', [token]);
+     res.header('ref-token', [refreshToken]);
+     res.json({accessToken: token, refreshToken: refreshToken});
 
 
 });
@@ -142,11 +144,13 @@ router.post('/login', async (req,res) => {
 //Request a new token
 router.post('/token', async (req,res) => {
 
-     const refToken = req.body.token;
+     const refToken = req.header('ref-token');
      jwt.verify(refToken, process.env.REFRESH_SECRET, (err,user) => {
           if (err) return res.status(400).send('Access Denied');
           const accessToken = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn:'15s'});
-          res.json({newToken: accessToken})
+          res.header('auth-token', [accessToken]);
+          res.json({newToken: accessToken});
+          
      })
 
 });
