@@ -10,9 +10,9 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (req,res) => {
 
      //Validate Data
-     /*const {error} = registerValidation(req.body);
+     const {error} = registerValidation(req.body);
      if(error)
-     return res.status(400).send(error.details[0].message);*/
+     return res.status(400).send(error.details[0].message);
 
      //Check if user is registered
      const emailExists = await User.findOne({email: req.body.email});
