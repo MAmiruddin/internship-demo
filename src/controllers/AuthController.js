@@ -31,6 +31,8 @@ class AuthController {
             await res.status(200).json("Autharized Log in!");
 
             console.log("User Login");
+
+            // For debugging purposes (Token)
             // console.log(req.header('auth-token'));
             // console.log(token);
             // console.log(req.header('ref-token'));
@@ -45,13 +47,13 @@ class AuthController {
         try {
             const registeredUserData = await this.service.register( req.body );
 
-            await res.status( 200 ).json( registeredUserData );
+            await res.status(201).json( registeredUserData );
         } catch ( e ) {
             next( e );
         }
     }
 
-
+    // This function is a WIP
     async changePassword( req, res, next ) {
         try {
             const id = req.user._id;
