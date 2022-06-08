@@ -3,10 +3,12 @@ const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+
+
 //Import route
-const authRoute = require('./route/auth');
-const postRoute = require('./route/post');
-const tenantRoute = require('./route/tenant');
+const authRoute = require('./src/route/auth');
+//const postRoute = require('./src/route/post');
+//const tenantRoute = require('./src/route/tenant');
 
 
 dotenv.config();
@@ -21,8 +23,8 @@ app.use(express.json());
 
 //Route Middlewares
 app.use('/api/user', authRoute);
-app.use('/api/post', postRoute);
-app.use('/api/tenant', tenantRoute);
+//app.use('/api/post', postRoute);
+//app.use('/api/tenant', tenantRoute);
 
 
 
