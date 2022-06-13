@@ -52,6 +52,16 @@ class Auth {
                 throw e;
             }
         };
+
+        schema.statics.decodeRefToken = async function (refToken) {
+            // Verify the token
+            try {
+                return await jwt.verify(refToken, process.env.REFRESH_SECRET);
+            } catch (e) {
+                throw e;
+            }
+        };
+
         try {
             mongoose.model('auth', schema);
         } catch (e) { }

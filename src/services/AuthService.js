@@ -94,6 +94,34 @@ class AuthService {
         }
     }
 
+    async genNewToken(refToken) {
+        
+    // Check the token is a valid JWT
+    const user = await this.model.decodeRefToken( refToken );
+
+    if ( !user ) {
+        const error = new Error( 'Invalid Refresh Token' );
+
+        error.statusCode = 401;
+        throw error;
+    }
+    else {
+            // Process Login
+            try {
+
+                const token = await this.model.generateToken(user);
+
+                return token;
+
+                //Same problems as in Login
+                //return new HttpResponse( refToken );
+            } catch ( e ) {
+                throw e;
+            }
+
+        }
+    }
+
     async register( data ) {
         try {
             return await this.userService.insert( data );

@@ -4,7 +4,7 @@ const router = express.Router();
 const pluralize = require( 'pluralize' );
 const path = require( 'path' );
 
-pluralize.addUncountableRule( 'media' );
+pluralize.addUncountableRule( 'user' );
 pluralize.addUncountableRule( 'auth' );
 
 const fs = require( 'fs' );

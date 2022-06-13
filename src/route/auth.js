@@ -4,6 +4,7 @@ const express = require( 'express' ),
     router = express.Router();
 
 router.post( '/login', AUthController.login );
+router.post( '/token', AUthController.newToken );
 router.get( '/logout', AUthController.checkLogin, AUthController.logout );
 router.post( '/register', AUthController.register );
 router.get( '/getData', AUthController.checkLogin, AUthController.getData );

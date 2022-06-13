@@ -4,7 +4,7 @@ const uniqueValidator = require( 'mongoose-unique-validator' );
 const bcrypt = require( 'bcrypt' ),
     SALT_WORK_FACTOR = 10;
 
-class User {
+class User  {
      
      initSchema () {
           const schema = new Schema({
@@ -31,7 +31,7 @@ class User {
           'tenant_id': {
                type: mongoose.Schema.Types.ObjectId,
                required: true, 
-               ref: 'tenant'
+               ref: 'tenants'
           },
           'date':{
                type: Date,
@@ -76,17 +76,18 @@ class User {
               } );
           } );
       };
+
       schema.statics.findByEmail = function( email ) {
           return this.findOne( { 'email': email } );
       };
 
-     schema.plugin( uniqueValidator );
+       schema.plugin( uniqueValidator );
 
-     try {
-          mongoose.model( 'user', schema );
-     } catch ( e ) {
-
-     }
+       try {
+            mongoose.model( 'user', schema );
+       } catch ( e ) {
+  
+       }
 
 }
 

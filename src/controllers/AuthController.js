@@ -12,6 +12,7 @@ class AuthController {
     constructor( service ) {
         this.service = service;
         this.login = this.login.bind(this);
+        this.newToken = this.newToken.bind(this)
         this.register = this.register.bind(this);
         this.changePassword = this.changePassword.bind(this);
         this.logout = this.logout.bind(this);
@@ -36,6 +37,27 @@ class AuthController {
             // console.log(req.header('auth-token'));
             // console.log(token);
             // console.log(req.header('ref-token'));
+            // console.log(refToken);
+
+        } catch ( e ) {
+            next( e );
+        }
+    }
+
+    async newToken( req, res, next ) {
+        try {
+            
+            const refToken = req.get('ref-token');
+
+            const newToken = await this.service.genNewToken(refToken);
+            await res.set('auth-token', [newToken]);
+            
+            res.status(200).json("Generated new token!");
+
+            // For debugging purposes (Token)
+            // console.log(req.header('auth-token'));
+            // console.log(newToken);
+            // console.log(req.get('ref-token'));
             // console.log(refToken);
 
         } catch ( e ) {

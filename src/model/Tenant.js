@@ -15,7 +15,7 @@ class Tenant {
           schema.plugin( uniqueValidator );
           
           try {
-               mongoose.model( 'user', schema );
+               mongoose.model( 'tenant', schema );
           } catch ( e ) {
      
           }
