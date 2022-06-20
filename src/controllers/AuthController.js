@@ -22,13 +22,9 @@ class AuthController {
     async login( req, res, next ) {
         try {
             
-            const token = await this.service.login( req.body.email, req.body.password );
+            const token = await this.service.login( req.body.email, req.body.password, res );
             await res.set('auth-token', [token]);
-            const refToken = await this.service.genRefToken( req.body.email, req.body.password );
-            await res.set('ref-token', [refToken]);
             
-            
-
             await res.status(200).json("Autharized Log in!");
 
             console.log("User Login");
@@ -75,6 +71,14 @@ class AuthController {
         }
     }
 
+    async redirect( req, res, next ) {
+        try {
+            res.json ("You have logged in using another device!");
+        } catch ( e ) {
+            next( e );
+        }
+    }
+
     // This function is a WIP
     async changePassword( req, res, next ) {
         try {
@@ -101,6 +105,10 @@ class AuthController {
 
     async logout( req, res, next ) {
         try {
+            //Destroy Tokens From Header
+            await res.set('auth-token', null);
+            await res.set('ref-token', null);
+            
             const response = await this.service.logout( req.token );
 
             await res.status( response.statusCode ).json( response );
@@ -115,7 +123,10 @@ class AuthController {
             //console.log(req.header('auth-token'));
 
             const token = req.header('auth-token');
-            req.user = await this.service.checkLogin( token, res );
+            const email = req.header('user-email');
+            const loginStamp = req.header('login-stamp');
+
+            req.user = await this.service.checkLogin( token, email, loginStamp, res );
             req.authorized = true;
             req.token = token;
             console.log("Autherized Log in !");
@@ -127,8 +138,9 @@ class AuthController {
 
     async getData( req, res, next ) {
         try {
-            res.json("Here is the secret data!")
-            console.log("Autherized Log in !");
+            const random = require('crypto').randomBytes(32).toString('hex');
+            res.json(random)
+            console.log(random);
             next();
         } catch ( e ) {
             next( e );

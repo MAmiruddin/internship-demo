@@ -46,75 +46,18 @@ class AuthService {
                 // Create Token
                 const token = await this.model.generateToken(user);
 
+                //Save Login Timestamp
+                let loginStamp = Date.now();
+                user.loginStamp = loginStamp;
+                user.save();
+
+                await res.set('user-email', email);
+                await res.set('login-stamp', loginStamp);
+
                 return token;
 
                 //Using HttpResponse function (Error in sending token because it sends an object)
                 //return new HttpResponse( token );
-            } catch ( e ) {
-                throw e;
-            }
-
-        }
-    }
-
-    async genRefToken(email,password) {
-        const user = await this.userService.findByEmail( email, true );
-
-        if ( !user ) {
-            // User not found
-            const error = new Error( 'Invalid Email' );
-
-            error.statusCode = 422;
-            throw error;
-        } else {
-            // Process Login
-            try {
-                // Check Password
-                const passwordMatched = await user.comparePassword( password );
-
-                if ( !passwordMatched ) {
-                    const error = new Error( 'Invalid Password' );
-
-                    error.statusCode = 422;
-                    throw error;
-                }
-
-                // Create Token
-                const refToken = await this.model.generateRefToken( user );
-
-
-                return refToken;
-
-                //Same problems as in Login
-                //return new HttpResponse( refToken );
-            } catch ( e ) {
-                throw e;
-            }
-
-        }
-    }
-
-    async genNewToken(refToken) {
-        
-    // Check the token is a valid JWT
-    const user = await this.model.decodeRefToken( refToken );
-
-    if ( !user ) {
-        const error = new Error( 'Invalid Refresh Token' );
-
-        error.statusCode = 401;
-        throw error;
-    }
-    else {
-            // Process Login
-            try {
-
-                const token = await this.model.generateToken(user);
-
-                return token;
-
-                //Same problems as in Login
-                //return new HttpResponse( refToken );
             } catch ( e ) {
                 throw e;
             }
@@ -148,9 +91,21 @@ class AuthService {
         }
     }
 
-    async checkLogin( token, res ) {
+    async checkLogin( token, email, loginStamp, res ) {
+        //Check if token and token code is present
         if(!token) return res.status(401).send('Access Denied!');
+
+        //Check if login stamp is present
+        if(!loginStamp) return res.status(401).send('Please Login!');
+
+        //Check if the login stamp is correct
+        const user = await this.userService.findByEmail( email, true );
+        let ts = user.loginStamp;
+        if(ts.getTime().toString() !== loginStamp) return res.redirect(307, "http://localhost:3000/api/auth/");
+
+        
         try{   
+
             // Check the token is a valid JWT
             const user = await this.model.decodeToken( token );
 
@@ -162,9 +117,7 @@ class AuthService {
             }
             
         } catch ( e ) {
-            const error = new Error( 'Expired Token! Please generate a new token or log in again.' );
-
-            error.statusCode = 401;
+            const error = new Error( 'Expired Token! Please log in again.' );
             throw error;
         }
     }

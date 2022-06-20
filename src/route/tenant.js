@@ -5,10 +5,10 @@ const express = require( 'express' ),
     router = express.Router();
 
     router.get( '/getAll', AUthController.checkLogin, TenantController.getAll );
-    router.get( '/:id', TenantController.get );
-    router.post( '/', TenantController.insert );
-    router.put( '/:id', TenantController.update );
-    router.delete( '/:id', TenantController.delete );
+    router.get( '/:id', AUthController.checkLogin, TenantController.get );
+    router.post( '/', AUthController.checkLogin, TenantController.insert );
+    router.put( '/:id', AUthController.checkLogin, TenantController.update );
+    router.delete( '/:id', AUthController.checkLogin, TenantController.delete );
     
 
 

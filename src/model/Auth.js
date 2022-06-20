@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken'),
     //jwtRefKey = process.env.REFRESH_SECRET,
     jwtExpirySeconds = '15s';
 
-
 class Auth {
     initSchema() {
         const schema = new Schema({
@@ -26,19 +25,8 @@ class Auth {
             // Create a new token with the user details
             try {
                 const token = await jwt.sign(
-                    {'_id': user._id.toString()}, process.env.TOKEN_SECRET, { expiresIn: '10s' });
+                    {'_id': user._id.toString()}, process.env.TOKEN_SECRET, { expiresIn: '50s' });
                 return token;
-            } catch (e) {
-                throw e;
-            }
-        };
-
-        schema.statics.generateRefToken = async function (user) {
-            // Create a new refresh token with the user details
-            try {
-                const refToken = await jwt.sign(
-                    {'_id': user._id.toString()}, process.env.REFRESH_SECRET);
-                return refToken;
             } catch (e) {
                 throw e;
             }
@@ -48,15 +36,6 @@ class Auth {
             // Verify the token
             try {
                 return await jwt.verify(token, process.env.TOKEN_SECRET);
-            } catch (e) {
-                throw e;
-            }
-        };
-
-        schema.statics.decodeRefToken = async function (refToken) {
-            // Verify the token
-            try {
-                return await jwt.verify(refToken, process.env.REFRESH_SECRET);
             } catch (e) {
                 throw e;
             }
